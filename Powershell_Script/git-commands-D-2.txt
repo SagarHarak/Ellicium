@@ -1,0 +1,334 @@
+﻿Downloading Git on Windows
+https://git-scm.com/download/win
+
+Installing on Debian-based distribution, such as Ubuntu
+sudo apt install git-all
+
+git config --global core.editor "'C:/Program Files/Notepad++/notepad++.exe' -multiInst -notabbar -nosession -noPlugin"
+
+#install git on respective OS from https://git-scm.com
+#start a new repository.
+git init
+
+git config --list --show-origin
+git config --global user.email "name@example.com"
+git config --global user.name "Yourname"
+#Check Your git Settings
+git config --list
+
+#You can also check what Git thinks a specific key’s value is by typing git config <key>:
+#To Change the user.name property
+git config user.name
+
+$ git config user.name
+
+
+#Getting help from git
+git help <verb>
+git help config
+git add -h
+
+###Working with GIT Local###
+#go to the directory where you want to initialize as git repo
+echo 'This is Repo Created for Devops Demo' > README
+git status
+
+#To track the file, add this file into staging area
+git add README
+git status
+
+#If you edit a file that is already staged . it will appear in "Changes to be committed:" and "Changes not staged for commit:"
+
+
+#Viewing Your Staged and Unstaged Changes
+#make some changes in the file that is already staged, below command will show the differences
+git diff 
+
+
+#If you want to see what you’ve staged that will go into your next commit, you can use
+#This command compares your staged changes to your last commit:
+git diff --staged
+
+
+#Commit the changes to the repo
+git commit 
+OR
+git commit -m "changes made in the particular file"
+
+
+#Viewing the Commit History
+git log
+#see only last two entries
+git log -p 2
+
+git log --stat
+git log --pretty=oneline
+
+#Limiting Log Output
+git log --since=2.weeks
+
+
+#undo Things
+git commit -m '1st commit'
+git add forgotten_file
+git commit --amend
+You end up with a single commit — the second commit replaces the results of the first.
+
+#Unstaging a Staged File
+git add *
+git reset file1 file2
+
+
+#Generating an SSH Key
+ssh-keygen -t rsa -C "github-sign-in-emailid@gmail.com"
+
+#Use your actual email address in the example above.
+#Verify SSH authentication
+ssh -T git@github.com
+
+#Above command uses ssh to connect to GitHub over the SSH protocol.
+
+#Create a empty repository in github from browser
+#Push from existing repository 
+git remote add origin git@github.com:githubusername/git-practical.git
+
+
+#check remote repo 
+git remote -v
+
+#First time push command use below -u parameter
+git push -u origin master
+
+#make some changes to a file locally and push it to GH
+git add filename
+git status
+git commit -m "Message for the commit"
+#Before pushing any changes , make sure your local files are in sync with GH repo
+git pull origin master
+#Push changes in GH
+git push origin master
+
+#To get or display the content of the file as per particular commit
+git log
+git checkout e4b71efa7f76c0fc0875e0562d5fb6d7dadbff9c test.txt
+OR
+git show e4b71efa7f76c0fc0875e0562d5fb6d7dadbff9c:test.txt
+
+#Git command - Day-2
+#initialize a new empty directory to understand branching and merging
+git init
+
+echo "Hello World-1a" >> file1.txt
+echo "Hello World-1b" >> file1.txt
+git add file1.txt
+git commit -m "added hello world-1 to file1.txt" 
+
+echo "Hello World - 2nd commit" >> file1.txt
+git add file1.txt
+#commit above file
+git commit -m "added 2nd hello world to file1.txt" 
+OR
+#If you want to stage all modified files and commit in one line command
+git commit -a -m "added 2nd hello world to file1.txt" 
+
+
+git log --all --decorate --graph
+
+#if you dont want to type the above command everytime , create a alias for above command
+
+alias mygraph="git log --all --decorate --graph"
+
+#use this alias command everytime to check the HEAD pointer
+#To see all the alias created in linux
+alias 
+
+ls -ltr .git/refs
+
+cat .git/refs/heads/master
+#Content of this file is the checksum of last commit
+
+#verify the above checksum value with
+git log
+
+#create new branch - usually feature branches
+git branch feature_1 
+git checkout feature_1
+OR
+git checkout -b feature_1 
+
+echo "Adding this line only in feature_1 branch" >> file1.txt
+git add file1.txt
+#commit above file
+git commit -m "added line in feature_1 branch file1.txt" 
+
+*********************************************
+git checkout master
+*********************************************
+#create new branch - usually feature branches
+git branch feature_2
+git checkout feature_2
+
+echo "Adding this line only in feature_2 branch" >> file1.txt
+git add file1.txt
+#commit above file
+git commit -m "added line in feature_2 branch file1.txt" 
+
+#Check all branches
+git branch
+
+ls -ltr .git/refs
+cat .git/refs/heads/feature_1
+
+#Since there are two branches now , i.e master and feature , git knows about the current branch using HEAD
+
+cat .git/HEAD
+
+git checkout master
+
+cat .git/HEAD
+
+
+#View all branches 
+git branch
+
+#Check the HEAD pointer
+mygraph
+
+#Merging
+###Fast Forward Merge###
+#This type of merge only be done when there is direct path available
+git checkout master
+
+#Check diff between two branches, below command will shows what will change if we merge feature_1 into master
+git diff master..feature_1
+
+git merge feature_1
+
+cat file1.txt
+
+#Check pointer
+mygraph
+
+#verify the branches that are merged
+git branch --merged
+
+#If work is done on the feature_1 branch , we can delete it by below comman
+git branch -d feature_1
+
+#if we try to delete the other feature branch i.e feature_2, git will display a "not fully merged" message
+git branch -d feature_2
+
+******************************************************************
+###3-Way Merge###
+#Since master is now ahead of the path from where feature_2 was created, a direct fast forward merge is not possible
+#if it is done, changes at the current master branch can be lost
+
+
+###3-Way Merge###
+#Check if we are in master branch
+git status
+
+#To merge feature_2 branch into master
+git merge feature_2
+
+#Check pointer with mygraph command
+mygraph
+
+#confirm whether master and feature_2 are merged
+git branch --merged
+
+#Now branch feature_2 can be deleted
+git branch -d feature_2
+
+###Merge Conflicts###
+#Merging two branches that have changes in the same lines in same files can create merge conflicts
+#Create a new branch 
+
+git branch qa_branch
+git checkout -b qa_branch
+cat file.txt
+#edit the file1.txt using any editor and change some content on the same line
+
+git diff
+#stage and commit above changes using one command
+git commit -a -m "change some characters in the same line inside qa_branch"
+
+#verify the content of the file on each branch
+#make sure you are on master branch
+#When you try to merge the qa_branch
+git merge qa_branch
+
+git status
+
+#When there are merge conflicts, go to the file manually and check headers above and below "======="
+
+#Keep the content as required, stage and commit again
+
+#To look at all the files at a particular commit id:
+git checkout commit-id
+
+#Here , HEAD pointer is pointing to commit directly instead of a branch
+#To point HEAD again to branch , use below
+git checkout master
+
+#If you want to create a new branch from any other previous commit-id
+git checkout commit-id
+
+#Create a new branch from where the HEAD is pointing to a commit id
+git branch commit-branch
+
+#Checkout the new branch for HEAD to point to it
+git checkout commit-branch
+
+
+#.gitignore
+echo "test" >> ignore.txt
+vi .gitignore
+#enter the name of the files that git should not consider for staging,commit etc
+git status
+#stage and commit the .gitignore files
+
+###This is just for reference-START###
+
+Creating a remote repository reference
+
+git remote add remote-name remote-repository-location
+
+Using git remote add command allows us to associate a remote repository. Normally, you want to paste in the full URL for the remote repository given to you by your Git host (GitHub). By convention, the first or primary remote repository is named origin.
+
+List Git's Remotes
+
+git remote -v
+
+The git remote command lists the names of all the remote repositories and the -v parameter (verbose) will display the full URL of the remote repository for each remote name listed
+
+Send Changes to Remote
+
+git push -u remote-name branch-name
+git push remote-name branch-name
+
+The git push sends all your local changes (commits) on branch branch-name to the remote named remote-name. The -u parameter is needed the first time you push a branch to the remote.
+
+Receive Changes from Remote
+
+git pull remote-name branch-name
+
+The git pull receives all your remote changes (commits) from the remote named remote-name and on branch branch-name.
+
+###This is just for reference-END###
+
+
+
+BE - API
+FE -UI
+
+
+
+
+
+
+
+https://git-codecommit.us-east-2.amazonaws.com/v1/repos/code-commit-repo-demo
+
+ sushma-at-943686114138 
+DsV8HPrZavlHugIB8doiwNXz5PYEvFgKGhbtcvzMzTI=
