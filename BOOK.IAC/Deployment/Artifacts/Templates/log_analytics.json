@@ -1,0 +1,55 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WorkspaceName": {
+            "type": "string"
+        },
+        "location": {
+            "type": "String",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "sku": {
+            "type": "string",
+            "defaultValue": "pergb2018"
+        },
+
+        "CreatedAt": {
+            "type": "string",
+            "defaultValue": "[utcNow('d')]"
+        },
+        "createdBy": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "ProjectCodeNameCodeName": {
+            "type": "string",
+            "defaultValue": ""
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[parameters('WorkspaceName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "ProjectCodeName": "[parameters('ProjectCodeName')]",
+                "createdBy": "[parameters('createdBy')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "properties": {
+                "sku": {
+                    "name": "[parameters('sku')]"
+                },
+                "retentionInDays": 30
+            }
+        }
+    ],
+    "outputs": {
+        "pricingTier": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('WorkspaceName'))]"
+        }
+    }
+}

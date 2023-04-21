@@ -1,0 +1,178 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "WebAppServicePlan": {
+      "type": "string"
+    },
+    "WebAppName": {
+      "type": "string"
+    },
+    "AppRegistrationAppId": {
+      "type": "string"
+    },
+    "TenantId": {
+      "type": "string"
+    },
+    "location": {
+      "type": "String",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "CreatedAt": {
+      "type": "string",
+      "defaultValue": "[utcNow('d')]"
+    },
+
+    "ProjectCodeName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+
+    "createdBy": {
+      "type": "string",
+      "defaultValue": ""
+    }
+  },
+  "variables": {
+    "TenantId": "[subscription().TenantId]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2021-03-01",
+      "name": "[parameters('WebAppServicePlan')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "B1",
+        "tier": "Basic",
+        "capacity": 1
+      },
+      "properties": {
+        "reserved": true
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites",
+      "apiVersion": "2022-03-01",
+      "name": "[parameters('WebAppName')]",
+      "tags": {
+        "ProjectCodeName": "[parameters('ProjectCodeName')]",
+        "createdBy": "[parameters('createdBy')]",
+        "createdAt": "[parameters('CreatedAt')]"
+      },
+      "location": "[parameters('location')]",
+      "kind": "app,linux",
+      "identity": {
+        "type": "SystemAssigned"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('WebAppServicePlan'))]"
+      ],
+      "properties": {
+        "enabled": true,
+        "reserved": false,
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('WebAppServicePlan'))]",
+        "siteConfig": {
+          "linuxFxVersion": "python|3.9",
+          "alwaysOn": false,
+          "http20Enabled": true,
+          "httpsOnly": true,
+          "redundancyMode": "None",
+          "publicNetworkAccess": "Enabled",
+          "storageAccountRequired": false,
+          "appSettings": [
+            {
+              "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+              "value": "True"
+            },
+            {
+              "name": "CosmosDbDatabaseName",
+              "value": "supplierDB"
+            },
+            {
+              "name": "CosmosDbContainerName",
+              "value": "Supplierlist"
+            },
+            {
+              "name": "WEBSITES_PORT",
+              "value": "8080"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2022-03-01",
+      "name": "[concat(parameters('WebAppName'), '/web')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('WebAppName'))]"
+      ],
+      "properties": {
+        "numberOfWorkers": 1,
+        "defaultDocuments": [
+          "Default.htm",
+          "Default.html",
+          "Default.asp",
+          "index.htm",
+          "index.html",
+          "iisstart.htm",
+          "default.aspx",
+          "index.php",
+          "hostingstart.html"
+        ],
+        "netFrameworkVersion": "v4.0",
+        "linuxFxVersion": "PYTHON|3.9",
+        "requestTracingEnabled": false,
+        "remoteDebuggingEnabled": false,
+        "remoteDebuggingVersion": "VS2019",
+        "httpLoggingEnabled": false,
+        "acrUseManagedIdentityCreds": false,
+        "logsDirectorySizeLimit": 35,
+        "detailedErrorLoggingEnabled": false,
+        "scmType": "None",
+        "use32BitWorkerProcess": true,
+        "webSocketsEnabled": false,
+        "alwaysOn": false,
+        "appCommandLine": "gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app"
+      }
+    },
+    {
+      "name": "[concat(parameters('WebAppName'), '/authsettingsV2')]",
+      "type": "Microsoft.Web/sites/config",
+      "apiVersion": "2020-12-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('WebAppName'))]"
+      ],
+      "properties": {
+        "platform": {
+          "enabled": true
+        },
+        "globalValidation": {
+          "requireAuthentication": true,
+          "unauthenticatedClientAction": "Return401"
+        },
+        "identityProviders": {
+          "azureActiveDirectory": {
+            "enabled": true,
+            "registration": {
+              "openIdIssuer": "[concat('https://sts.windows.net/',variables('TenantId'),'/')]",
+              "clientId": "[parameters('AppRegistrationAppId')]"
+            }
+          },
+          "isAutoProvisioned": false
+        },
+        "login": {
+          "tokenStore": {
+            "enabled": true
+          }
+        },
+        "httpSettings": {
+          "requireHttps": true
+        }
+      }
+    }
+  ],
+  "outputs": {}
+}

@@ -1,0 +1,8 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# virtual env
+/.venv
+/__pycache__
+
+# env variables
+.env
