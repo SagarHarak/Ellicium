@@ -1,0 +1,2604 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "GTO Prime Documentation",
+    "description": "GTO Prime Documentation Description",
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000/api"
+    },
+    {
+      "url": "BASEURL"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "User Details"
+    },
+    {
+      "name": "Company",
+      "description": "Company Details"
+    },
+    {
+      "name": "Competitor Analysis Dashboard",
+      "description": "Competitor Analysis Dashboard"
+    },
+    {
+      "name": "Summary Dashboard",
+      "description": "Summary Dashboard"
+    },
+    {
+      "name": "VCN & Exposure",
+      "description": "VCN & Exposure"
+    },
+    {
+      "name": "VCN Chart Data Routes",
+      "description": "VCN Chart Data Routes"
+    },
+    {
+      "name": "Supplier ScoreCard",
+      "description": "Supplier ScoreCard"
+    },
+    {
+      "name": "Supplier",
+      "description": "Supplier"
+    },
+    {
+      "name": "Digital Twin",
+      "description": "Digital Twin"
+    },
+    {
+      "name": "DATA MGMT",
+      "description": "DATA MGMT"
+    },
+    {
+      "name": "Risk Selection",
+      "description": "Risk Selection"
+    }
+  ],
+  "paths": {
+    "/v1/common/get-user": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get User Details",
+        "description": "Get User Details",
+        "operationId": "getuser",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/common/get-companies": {
+      "get": {
+        "tags": ["Company"],
+        "summary": "Get distinct companies",
+        "description": "Get distinct companies",
+        "operationId": "getcompany",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/competitor-analysis-dashboard/get-filters": {
+      "post": {
+        "tags": ["Competitor Analysis Dashboard"],
+        "summary": "Get Competitor Analysis Filters",
+        "description": "Get Competitor Analysis Filters",
+        "operationId": "getfilter",
+        "requestBody": {
+          "description": "Create a new pet in the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "country_filters": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "Country_of_Origin": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "importer_filters": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "Importer": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "hs_filters": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "HS": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "provider_filters": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "Provider": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "supporter_type_filters": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "Supplier_type": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "petstore_auth": ["write:pets", "read:pets"]
+          }
+        ]
+      }
+    },
+    "/v1/competitor-analysis-dashboard/all-competitors-data": {
+      "post": {
+        "tags": ["Competitor Analysis Dashboard"],
+        "summary": "Get Competitor Analysis Full Data",
+        "description": "Get Competitor Analysis Full Data",
+        "requestBody": {
+          "description": "Create a new pet in the store",
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "Country_of_Origin": {
+                    "type": "string",
+                    "example": "'United States','BELGIUM','CHINA'"
+                  },
+                  "Importer": {
+                    "type": "string",
+                    "example": "'ADIENT MEXICO AUTOMOTRIZ S DE R.L. DE C.V.'"
+                  },
+                  "HS": {
+                    "type": "number",
+                    "example": 940190
+                  },
+                  "Supplier_Type": {
+                    "type": "string",
+                    "example": "'Third party'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "Provider_State_City": {
+                        "type": "string"
+                      },
+                      "Port": {
+                        "type": "string"
+                      },
+                      "Importer_City": {
+                        "type": "string"
+                      },
+                      "Naics_Code": {
+                        "type": "string"
+                      },
+                      "Unit_Value_USD": {
+                        "type": "string"
+                      },
+                      "Importer": {
+                        "type": "string"
+                      },
+                      "Commercial_Unit": {
+                        "type": "string"
+                      },
+                      "Port_ID": {
+                        "type": "string"
+                      },
+                      "Importer_State": {
+                        "type": "string"
+                      },
+                      "Importer_Address": {
+                        "type": "string"
+                      },
+                      "HS_Description": {
+                        "type": "string"
+                      },
+                      "Provider_State_Declared": {
+                        "type": "string"
+                      },
+                      "Naics_Classification": {
+                        "type": "string"
+                      },
+                      "Port_State": {
+                        "type": "string"
+                      },
+                      "Weight": {
+                        "type": "string"
+                      },
+                      "Date": {
+                        "type": "string"
+                      },
+                      "Provider": {
+                        "type": "string"
+                      },
+                      "Provider_Address": {
+                        "type": "string"
+                      },
+                      "Product_HS": {
+                        "type": "string"
+                      },
+                      "Provider_Declared": {
+                        "type": "string"
+                      },
+                      "Transport_Method": {
+                        "type": "string"
+                      },
+                      "Customs_Value_USD": {
+                        "type": "string"
+                      },
+                      "Commercial_Quantity": {
+                        "type": "string"
+                      },
+                      "row_id": {
+                        "type": "string"
+                      },
+                      "Country_of_Origin": {
+                        "type": "string"
+                      },
+                      "HS": {
+                        "type": "string"
+                      },
+                      "HS_Desc": {
+                        "type": "string"
+                      },
+                      "Time": {
+                        "type": "string"
+                      },
+                      "Supplier_Type": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/competitor-analysis-dashboard/competitors-weight-distribution": {
+      "post": {
+        "tags": ["Competitor Analysis Dashboard"],
+        "summary": "Get Competitor Analysis Weight Distribution By Country & Provider",
+        "description": "Get Competitor Analysis Weight Distribution By Country & Provider",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "Country_of_Origin": {
+                    "type": "string",
+                    "example": "'United States','BELGIUM','CHINA'"
+                  },
+                  "Importer": {
+                    "type": "string",
+                    "example": "'ADIENT MEXICO AUTOMOTRIZ S DE R.L. DE C.V.'"
+                  },
+                  "HS": {
+                    "type": "number",
+                    "example": 940190
+                  },
+                  "Supplier_Type": {
+                    "type": "string",
+                    "example": "'Third party'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Country_Weight_Distribution": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "Weight_Percentage": {
+                            "type": "number"
+                          },
+                          "Country_of_Origin": {
+                            "type": "string"
+                          },
+                          "No_Of_Suppliers": {
+                            "type": "number"
+                          }
+                        }
+                      }
+                    },
+                    "Provider_Weight_Distribution": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "Weight_Percentage": {
+                            "type": "number"
+                          },
+                          "Country_of_Origin": {
+                            "type": "string"
+                          },
+                          "Provider": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/summary-dashboard/inventory-analysis-summary": {
+      "get": {
+        "tags": ["Summary Dashboard"],
+        "summary": "Get Inventory Analysis",
+        "description": "Get Inventory Analysis",
+        "operationId": "inventory-analysis-summary",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "Inventory_Turnover_Rate": {
+                        "type": "string"
+                      },
+                      "Inventory_Rate_Of_Return": {
+                        "type": "string"
+                      },
+                      "Inventory_Write_Off_Reserves": {
+                        "type": "string"
+                      },
+                      "Overall": {
+                        "type": "string"
+                      },
+                      "Overall_Risk": {
+                        "type": "string"
+                      },
+                      "Mitigation": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/summary-dashboard/import-analysis-summary": {
+      "get": {
+        "tags": ["Summary Dashboard"],
+        "summary": "Get Import Analysis",
+        "description": "Get Import Analysis",
+        "operationId": "import-analysis-summary",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "No_Of_Suppliers": {
+                        "type": "string"
+                      },
+                      "Average_Revenue_Of_Suppliers": {
+                        "type": "string"
+                      },
+                      "Average_Credit_Health": {
+                        "type": "string"
+                      },
+                      "Overall": {
+                        "type": "string"
+                      },
+                      "Overall_Risk": {
+                        "type": "string"
+                      },
+                      "Mitigation": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/summary-dashboard/product-category-wise-avg-risks": {
+      "get": {
+        "tags": ["Summary Dashboard"],
+        "summary": "Get Product Category Wise Average Risk",
+        "description": "Get Product Category Wise Average Risk",
+        "operationId": "product-category-wise-avg-risks",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "product_category": {
+                        "type": "string"
+                      },
+                      "avg_score": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-all-product-category": {
+      "get": {
+        "tags": ["VCN & Exposure"],
+        "summary": "Get All Product Category",
+        "description": "Get All Product Category",
+        "operationId": "get-all-product-category",
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "product_category": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-all-products": {
+      "get": {
+        "tags": ["VCN & Exposure"],
+        "summary": "Get All Products",
+        "description": "Get All Products",
+        "operationId": "get-all-products",
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-filters": {
+      "post": {
+        "tags": ["VCN & Exposure"],
+        "summary": "Get VCN Filters",
+        "description": "Get VCN Filters",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "risk_type": {
+                        "type": "string"
+                      },
+                      "risk_level": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "month": {
+                        "type": "string"
+                      },
+                      "year": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-kpis": {
+      "post": {
+        "tags": ["VCN & Exposure"],
+        "summary": "Get VCN KPIs",
+        "description": "Get VCN KPIs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  },
+                  "shipper_id": {
+                    "type": "array",
+                    "example": ["2613"]
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "'Germany'"
+                  },
+                  "risk_level": {
+                    "type": "string",
+                    "example": "'High'"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "'Transport'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_spend": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "total_spend": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "revenue_at_risk": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "revenue_at_risk": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "supplier_at_risk": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "supplier_at_risk": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "product_at_risk": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "product_at_risk": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "component_at_risk": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "component_at_risk": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "key_events": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "key_event": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "key_locations": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "Key_Locations": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "total_revenue": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "total_revanue": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "total_margin": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "total_margin": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-kpi-trend-data": {
+      "post": {
+        "tags": ["VCN Chart Data Routes"],
+        "summary": "Get All Micro Charts",
+        "description": "Get All Micro Charts",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  },
+                  "shipper_id": {
+                    "type": "array",
+                    "example": ["2613"]
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "'Germany'"
+                  },
+                  "risk_level": {
+                    "type": "string",
+                    "example": "'High'"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "'Transport'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "total_spend_trend_data": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "total_spend": {
+                            "type": "number"
+                          },
+                          "quarter": {
+                            "type": "string"
+                          },
+                          "Year": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "revenue_at_risk_trend_data": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "supplier_at_risk": {
+                            "type": "number"
+                          },
+                          "quarter": {
+                            "type": "string"
+                          },
+                          "Year": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "product_at_risk_trend_data": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "product_at_risk": {
+                            "type": "number"
+                          },
+                          "quarter": {
+                            "type": "string"
+                          },
+                          "Year": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "total_margin_trend_data": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "total_margin": {
+                            "type": "number"
+                          },
+                          "quarter": {
+                            "type": "string"
+                          },
+                          "Year": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "total_revenue_trend_data": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "total_revenue": {
+                            "type": "number"
+                          },
+                          "quarter": {
+                            "type": "string"
+                          },
+                          "Year": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "component_at_risk_trend_data": {
+                      "type": "array",
+                      "xml": {
+                        "wrapped": true
+                      },
+                      "items": {
+                        "properties": {
+                          "component_at_risk": {
+                            "type": "number"
+                          },
+                          "quarter": {
+                            "type": "string"
+                          },
+                          "Year": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-product-component-network": {
+      "post": {
+        "tags": ["VCN Chart Data Routes"],
+        "summary": "Get Product Component Networkh",
+        "description": "Get Product Component Networkh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  },
+                  "shipper_id": {
+                    "type": "array",
+                    "example": ["2613"]
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "'Germany'"
+                  },
+                  "risk_level": {
+                    "type": "string",
+                    "example": "'High'"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "'Transport'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "component_id": {
+                        "type": "string"
+                      },
+                      "component_name": {
+                        "type": "string"
+                      },
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "month": {
+                        "type": "string"
+                      },
+                      "year": {
+                        "type": "string"
+                      },
+                      "revenue": {
+                        "type": "string"
+                      },
+                      "risk_type": {
+                        "type": "string"
+                      },
+                      "score": {
+                        "type": "string"
+                      },
+                      "risk_level": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-supplier-network": {
+      "post": {
+        "tags": ["VCN Chart Data Routes"],
+        "summary": "Get Supplier Network",
+        "description": "Get Supplier Network",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  },
+                  "shipper_id": {
+                    "type": "array",
+                    "example": ["2613"]
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "'Germany'"
+                  },
+                  "risk_level": {
+                    "type": "string",
+                    "example": "'High'"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "'Transport'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "component_id": {
+                        "type": "string"
+                      },
+                      "component_name": {
+                        "type": "string"
+                      },
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "shipper_tier": {
+                        "type": "string"
+                      },
+                      "consignee_id": {
+                        "type": "string"
+                      },
+                      "consignee_company_name": {
+                        "type": "string"
+                      },
+                      "month": {
+                        "type": "string"
+                      },
+                      "year": {
+                        "type": "string"
+                      },
+                      "invoice_quantity": {
+                        "type": "string"
+                      },
+                      "invoice_amount": {
+                        "type": "string"
+                      },
+                      "risk_type": {
+                        "type": "string"
+                      },
+                      "score": {
+                        "type": "string"
+                      },
+                      "risk_level": {
+                        "type": "string"
+                      },
+                      "home_port_id": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "lat": {
+                        "type": "string"
+                      },
+                      "lng": {
+                        "type": "string"
+                      },
+                      "is_default": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/get-supplier-overall-risk-exposure": {
+      "post": {
+        "tags": ["VCN Chart Data Routes"],
+        "summary": "Get Overall Exposure",
+        "description": "Get Overall Exposure",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  },
+                  "shipper_id": {
+                    "type": "array",
+                    "example": ["2613"]
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "'Germany'"
+                  },
+                  "risk_level": {
+                    "type": "string",
+                    "example": "'High'"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "'Transport'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "shipper_id": {
+                        "type": "number"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "Avg_score": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/supplier-count-by-region": {
+      "post": {
+        "tags": ["VCN Chart Data Routes"],
+        "summary": "Get Supplier Count By Region",
+        "description": "Get Supplier Count By Region",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  },
+                  "shipper_id": {
+                    "type": "array",
+                    "example": ["2613"]
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "'Germany'"
+                  },
+                  "risk_level": {
+                    "type": "string",
+                    "example": "'High'"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "'Transport'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "country": {
+                        "type": "string"
+                      },
+                      "country_code": {
+                        "type": "string"
+                      },
+                      "supplier_count": {
+                        "type": "number"
+                      },
+                      "avg_score": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/vcn-and-exp/supplier-count-by-country": {
+      "post": {
+        "tags": ["VCN Chart Data Routes"],
+        "summary": "Get Supplier Count By Country",
+        "description": "Get Supplier Count By Country",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  },
+                  "risk_level": {
+                    "type": "string",
+                    "example": "'High'"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "'Transport'"
+                  },
+                  "country_code": {
+                    "type": "string",
+                    "example": "'IN'"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "avg_score": {
+                        "type": "string"
+                      },
+                      "avg_risk_level": {
+                        "type": "string"
+                      },
+                      "country_code": {
+                        "type": "string"
+                      },
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/supplier-scorecard/supplier-details-and-exposures": {
+      "post": {
+        "tags": ["Supplier ScoreCard"],
+        "summary": "Supplier ScoreCard",
+        "description": "Supplier ScoreCard",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "shipper_id": {
+                    "type": "string",
+                    "example": "2105"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "risk_type": {
+                        "type": "string"
+                      },
+                      "score": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/supplier-scorecard/product-by-this-supplier": {
+      "post": {
+        "tags": ["Supplier ScoreCard"],
+        "summary": "Supplier ScoreCard",
+        "description": "Supplier ScoreCard",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "shipper_id": {
+                    "type": "string",
+                    "example": "2105"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "component_name": {
+                        "type": "string"
+                      },
+                      "component_id": {
+                        "type": "string"
+                      },
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "invoice_quantity": {
+                        "type": "string"
+                      },
+                      "invoice_amount": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/supplier-scorecard/alternative-suppliers-by-product": {
+      "post": {
+        "tags": ["Supplier ScoreCard"],
+        "summary": "Supplier ScoreCard",
+        "description": "Supplier ScoreCard",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "shipper_id": {
+                    "type": "string",
+                    "example": "2105"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "risk_type": {
+                        "type": "string"
+                      },
+                      "score": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "alternate_company": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/supplier-scorecard/alternative-suppliers-by-supplier": {
+      "post": {
+        "tags": ["Supplier"],
+        "summary": "Supplier",
+        "description": "Supplier",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "shipper_id": {
+                    "type": "string",
+                    "example": "2105"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "Risk_Type": {
+                        "type": "string"
+                      },
+                      "Score": {
+                        "type": "number"
+                      },
+                      "Cost_Impact": {
+                        "type": "string"
+                      },
+                      "Quantity_Impact": {
+                        "type": "string"
+                      },
+                      "AVG_Time_Impact": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/supplier-scorecard/alternative-suppliers-drill-down-by-risk-type": {
+      "post": {
+        "tags": ["Supplier"],
+        "summary": "Supplier",
+        "description": "Supplier",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "shipper_id": {
+                    "type": "string",
+                    "example": "2105"
+                  },
+                  "risk_type": {
+                    "type": "string",
+                    "example": "Finance"
+                  },
+                  "drill_down": {
+                    "type": "string",
+                    "example": "Quantity"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "product_id": {
+                        "type": "number"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "component_id": {
+                        "type": "number"
+                      },
+                      "component_name": {
+                        "type": "string"
+                      },
+                      "Quantity": {
+                        "type": "string"
+                      },
+                      "Selling Price": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-twin/internal-routing/get-kpis": {
+      "post": {
+        "tags": ["Digital Twin"],
+        "summary": "Digital Twin",
+        "description": "Digital Twin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-twin/external-routing/get-kpis": {
+      "post": {
+        "tags": ["Digital Twin"],
+        "summary": "Digital Twin",
+        "description": "Digital Twin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "product_name": {
+                        "type": "number"
+                      },
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "avg_risk_score": {
+                        "type": "number"
+                      },
+                      "invoice_amount": {
+                        "type": "string"
+                      },
+                      "components_required": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-twin/external-routing/get-map-details": {
+      "post": {
+        "tags": ["Digital Twin"],
+        "summary": "Digital Twin",
+        "description": "Digital Twin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "T0_city": {
+                        "type": "string"
+                      },
+                      "T0_longitude": {
+                        "type": "number"
+                      },
+                      "T0_latitude": {
+                        "type": "number"
+                      },
+                      "T0_country": {
+                        "type": "string"
+                      },
+                      "T0_company_name": {
+                        "type": "string"
+                      },
+                      "T1_company_name": {
+                        "type": "string"
+                      },
+                      "T1_latitude": {
+                        "type": "string"
+                      },
+                      "T1_longitude": {
+                        "type": "string"
+                      },
+                      "T1_country": {
+                        "type": "string"
+                      },
+                      "product_id": {
+                        "type": "string"
+                      },
+                      "product_name": {
+                        "type": "string"
+                      },
+                      "component_id": {
+                        "type": "string"
+                      },
+                      "component_name": {
+                        "type": "string"
+                      },
+                      "T1_company_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "iso2": {
+                        "type": "string"
+                      },
+                      "country": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/digital-twin/internal-routing/get-map-details": {
+      "post": {
+        "tags": ["Digital Twin"],
+        "summary": "Digital Twin",
+        "description": "Digital Twin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "example": "1044"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/top-selection/suppliers/get-suppliers-information": {
+      "get": {
+        "tags": ["Top Selection"],
+        "summary": "Top Selection",
+        "description": "Top Selection",
+        "operationId": "get-suppliers-information",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "shipper_id": {
+                        "type": "string"
+                      },
+                      "shipper_company_name": {
+                        "type": "string"
+                      },
+                      "shipper_tier": {
+                        "type": "string"
+                      },
+                      "lat": {
+                        "type": "number"
+                      },
+                      "lng": {
+                        "type": "number"
+                      },
+                      "country": {
+                        "type": "string"
+                      },
+                      "iso2": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/top-selection/suppliers/get-country-list": {
+      "get": {
+        "tags": ["Top Selection"],
+        "summary": "Top Selection",
+        "description": "Top Selection",
+        "operationId": "get-country-list",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "country": {
+                        "type": "string"
+                      },
+                      "iso2": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/data-mgmt/upload/add-supplier": {
+      "post": {
+        "tags": ["DATA MGMT"],
+        "summary": "DATA MGMT",
+        "description": "DATA MGMT",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "company_id": {
+                    "type": "number",
+                    "example": "22222"
+                  },
+                  "company_name": {
+                    "type": "string",
+                    "example": "test"
+                  },
+                  "is_default": {
+                    "type": "boolean",
+                    "example": "false"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Success"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/risk-selection/risk/get-risk-config-information": {
+      "get": {
+        "tags": ["Risk Selection"],
+        "summary": "Risk Selection",
+        "description": "Risk Selection",
+        "operationId": "get-risk-config-information",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "xml": {
+                    "wrapped": true
+                  },
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "number"
+                      },
+                      "risk_category": {
+                        "type": "string"
+                      },
+                      "risk_type": {
+                        "type": "string"
+                      },
+                      "indicator": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "options": {
+                        "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/risk-selection/risk/update-risk-config": {
+      "patch": {
+        "tags": ["Risk Selection"],
+        "summary": "Risk Selection",
+        "description": "Risk Selection",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": [""],
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number",
+                    "example": "26"
+                  },
+                  "value": {
+                    "type": "string",
+                    "example": "Bombings"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "updated": {
+                      "type": "boolean",
+                      "example": "true"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Invalid status value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "An unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+name: $(BuildDefinitionName)_$(SourceBranchName)_$(date:yyyyMMdd)$(rev:.r)
+
+trigger:
+  # - main
+  - Development
+
+pool:
+  name: Azure Pipelines
+
+variables:
+  archiveName: 'AP.Prime.API.zip'
+  sandboxName: 'API'
+
+steps:
+- task: CopyFiles@2
+  inputs:
+    Contents: "**"
+    TargetFolder: "$(Build.ArtifactStagingDirectory)"
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(archiveName)'
+    replaceExistingArchive: true
+
+# - task: Veracode@3
+#   inputs:
+#     ConnectionDetailsSelection: 'Endpoint'
+#     AnalysisService: 'VeraCodeAPI'
+#     veracodeAppProfile: '$(system.teamProject)'
+#     version: '$(build.buildNumber)'
+#     filepath: '$(Build.ArtifactStagingDirectory)/$(archiveName)'
+#     sandboxName: $(sandboxName)
+#     createSandBox: true
+#     maximumWaitTime: '360'
+#     failBuildOnPolicyFail: false
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    ArtifactName: drop

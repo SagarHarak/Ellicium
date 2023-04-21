@@ -1,0 +1,111 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "String"
+        },
+        "location": {
+            "type": "String",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "CreatedAt":{
+            "type":"string",
+            "defaultValue": "[utcNow('d')]"
+        },
+        "project":{
+            "type":"string",
+            "defaultValue":""
+        },
+        "createdBy":{
+            "type":"string",
+            "defaultValue":""
+        },
+        "sku": {
+            "type": "String",
+            "defaultValue": "Standard"
+        },
+        "accessPolicies": {
+            "type": "Array",
+            "defaultValue": [
+                
+            ]
+        },
+        "tenant": {
+            "type": "String",
+            "defaultValue" : "[subscription().tenantId]"
+        },
+        "enabledForDeployment": {
+            "type": "Bool",
+            "defaultValue": false
+        },
+        "enabledForTemplateDeployment": {
+            "type": "Bool",
+            "defaultValue": false
+        },
+        "enabledForDiskEncryption": {
+            "type": "Bool",
+            "defaultValue": false
+        },
+        "enableRbacAuthorization": {
+            "type": "Bool",
+            "defaultValue": false
+        },
+        "publicNetworkAccess": {
+            "type": "String",
+            "defaultValue": "Enabled"
+        },
+        "enableSoftDelete": {
+            "type": "Bool",
+            "defaultValue": true
+        },
+        "softDeleteRetentionInDays": {
+            "type": "Int",
+            "defaultValue": 90
+        },
+        "iprule": {
+            "type": "array",
+            "defaultValue": [
+                {
+                    "value": "123.201.214.195"
+                },
+                {
+                    "value": "103.124.140.62/32"
+                }
+            ]
+
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2021-10-01",
+            "name": "[parameters('name')]",
+            "tags": {
+                "project": "[parameters('project')]",
+                "createdBy": "[parameters('createdBy')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "location": "[parameters('location')]",
+            "dependsOn": [],
+            "properties": {
+                "enabledForDeployment": "[parameters('enabledForDeployment')]",
+                "enabledForTemplateDeployment": "[parameters('enabledForTemplateDeployment')]",
+                "enabledForDiskEncryption": "[parameters('enabledForDiskEncryption')]",
+                "enableRbacAuthorization": "[parameters('enableRbacAuthorization')]",
+                "tenantId": "[parameters('tenant')]",
+                "accessPolicies": [
+                        ],
+                "sku": {
+                    "name": "[parameters('sku')]",
+                    "family": "A"
+                },
+                "publicNetworkAccess": "[parameters('publicNetworkAccess')]",
+                "enableSoftDelete": "[parameters('enableSoftDelete')]",
+                "softDeleteRetentionInDays": "[parameters('softDeleteRetentionInDays')]"
+            }
+        }
+    ],
+    "outputs": {}
+}

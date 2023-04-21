@@ -1,0 +1,245 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },        
+        "_artifactsLocation": {
+            "type": "string"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring"
+        },
+        "keyVaultName":{
+            "type": "string"
+        },
+         "ProjectCodeName":{
+            "type":"string"
+        },
+         "createdby":{
+            "type":"string",
+            "defaultValue" : ""
+        },
+         "sqlServerName":{
+            "type": "string"
+        },
+        "sqlDBName":{
+            "type": "string"
+        },
+        "AD_admin_name":{
+            "type": "string"
+        },
+        "AD_admin_objectid":{
+            "type": "string"
+        },
+        "sqladminLogin":{
+            "type": "string"
+        },
+        "sqladminLoginPassword":{
+            "type": "securestring"
+        },
+        "Appserviceuiname":{
+            "type": "string"
+        },
+        "AppServicePlanName":{
+            "type": "string"
+        },
+        "Appserviceapiname":{
+            "type": "string"
+        },
+         "firewall_rule1":{
+          "type": "string"
+        },
+        "firewall_rule2":{
+          "type": "string"
+        },
+        "firewall_rule3":{
+          "type": "string"
+        },
+        "firewall_rule4":{
+          "type": "string"
+        },
+        "firewall_rule5":{
+          "type": "string"
+        },
+        "FrontDoorName" :{
+            "type": "string"
+        },
+        "WafPolicyName":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "tenantId": "[subscription().tenantId]"
+    },
+    "resources": [
+        {
+            "name": "KeyVault",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'),'/Artifacts/Templates/azurekeyvault.json',parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters":{
+                    "name": {
+                        "value" : "[parameters('keyVaultName')]"
+                    },
+                    "project":{
+                        "value":"[parameters('ProjectCodeName')]"
+                    },
+                    "createdBy":{
+                        "value":"[parameters('createdby')]"
+                    }
+                    
+                }
+            }
+        },
+        {
+            "name": "WebApp_UI_API_AppServicePlan",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'),'/Artifacts/Templates/azurewebapptest.json',parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters":{
+                    "Appserviceuiname": {
+                        "value": "[parameters('Appserviceuiname')]"
+                    },
+                    "Appserviceapiname": {
+                        "value": "[parameters('Appserviceapiname')]"
+                    },
+                    "appserviceplanname": {
+                        "value": "[parameters('AppServicePlanName')]"
+                    },
+                    "project":{
+                        "value":"[parameters('ProjectCodeName')]"
+                    },
+                    "createdBy":{
+                        "value":"[parameters('createdby')]"
+                    }
+                }
+            }
+        },   
+        {
+            "name": "SqlServer_Database",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'),'/Artifacts/Templates/sql_server.json',parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "sqlServerName": {
+                        "value": "[parameters('sqlServerName')]"
+                    },
+                    "sqlDbName": {
+                        "value": "[parameters('sqlDBName')]"
+                    },
+                    "sqlServerAdminLogin": {
+                        "value": "[parameters('sqladminLogin')]"
+                    },
+                    "sqlServerAdminLoginPassword": {
+                        "value": "[parameters('sqladminLoginPassword')]"
+                    },
+                    "aadTenantId": {
+                        "value": "[variables('tenantId')]"
+                    },
+                    "aadAdminLogin": {
+                        "value": "[parameters('AD_admin_name')]"
+                    },
+                    "aadAdminObjectId": {
+                        "value": "[parameters('AD_admin_objectid')]"
+                    },
+                    "firewall_rule1":{
+                        "value": "[parameters('firewall_rule1')]"  
+                    },
+                    "firewall_rule2":{
+                        "value": "[parameters('firewall_rule2')]"
+                    },
+                    "firewall_rule3":{
+                        "value": "[parameters('firewall_rule3')]" 
+                    },
+                    "firewall_rule4":{
+                        "value": "[parameters('firewall_rule4')]" 
+                    },
+                    "firewall_rule5":{
+                        "value": "[parameters('firewall_rule5')]" 
+                    }
+                }
+            }  
+        },
+        {
+            "name": "AzureWafPolicy",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'),'/Artifacts/Templates/azurewafpolicy.json',parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters":{
+                    "WafPolicyName":{
+                        "value": "[parameters('WafPolicyName')]"
+                    },
+                    "project":{
+                        "value":"[parameters('ProjectCodeName')]"
+                    },
+                    "createdBy":{
+                        "value":"[parameters('createdby')]"
+                    }
+                }
+            }
+        },
+        {
+            "name": "AzureFrontDoor",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "dependsOn": [
+                    "[resourceId('Microsoft.Resources/deployments', 'WebApp_UI_API_AppServicePlan')]",
+                    "[resourceId('Microsoft.Resources/deployments', 'AzureWafPolicy')]"
+                ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(parameters('_artifactsLocation'),'/Artifacts/Templates/azurefrontdoor.json',parameters('_artifactsLocationSasToken'))]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters":{
+                    "FrontDoorname":{
+                        "value": "[parameters('FrontDoorName')]"
+                    },
+                    "frontend_webapp":{
+                        "value" : "[parameters('Appserviceuiname')]"
+                    },
+                    "backend_webapp":{
+                        "value" : "[parameters('Appserviceapiname')]"
+                    },
+                    "WafPolicyName":{
+                        "value": "[parameters('WafPolicyName')]"
+                    },
+                    "project":{
+                        "value":"[parameters('ProjectCodeName')]"
+                    },
+                    "createdBy":{
+                        "value":"[parameters('createdby')]"
+                    }
+                }
+            }
+        }     
+    ],
+    "outputs": {}    
+}       
