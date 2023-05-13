@@ -3,7 +3,6 @@ $resourceGroupName = "your-resource-group-name"
 $accountName = "your-cosmos-db-account-name"
 $keyVaultName = "your-key-vault-name"
 $keyName = "your-key-name"
-
 # Login to Azure account and select the subscription
 Connect-AzAccount
 Select-AzSubscription -SubscriptionId "your-subscription-id"
