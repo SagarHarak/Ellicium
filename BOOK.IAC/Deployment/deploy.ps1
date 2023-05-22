@@ -16,7 +16,6 @@ Param(
     [Parameter(Mandatory = $false)]
     [ValidateSet("dev", "uat", "prod")]
     [string]$Environment = "dev",
-
     [string] $ADAdminName,
     [string] $AADAdminId,
 
