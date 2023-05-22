@@ -1,0 +1,306 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "sqlServerName": {
+            "type": "string"
+        },
+      "sqlDbName": {
+            "type": "string"
+        },
+        "sqlserverLocation": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]"
+        },
+      "sqlDbSkuName": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
+        },
+        "sqlDbSkuTier": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
+        },
+        "sqlDbSkuFamily": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "sqlDbSkuCapacity": {
+            "type": "int",
+            "defaultValue": 10
+        },
+        "sqlDbCollation": {
+            "type": "string",
+            "minLength": 1,
+            "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+        },
+        "maxSizeInBytes": {
+            "type": "int",
+            "defaultValue": 5368709120
+        },
+        "sqlServerAdminLogin": {
+            "type": "string",
+            "metadata": {
+            "description": "Sql Database Admin Login."
+            }
+        },
+        "sqlServerAdminLoginPassword": {
+            "type": "securestring",
+            "metadata": {
+            "description": "Sql Database Admin Password."
+            }
+        },
+        "allowAllWindowsAzureIps": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+            "description": "Add a firewall rule to the server to allow all Windows Azure IPs."
+            }
+        },
+        "enableAadAdmin": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+            "description": "Enable Azure Active Directory user as SQL Server admin. Required to use AAD users/service principals as database users."
+            }
+        },
+        "aadTenantId": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "aadAdminLogin": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+            "description": "Either the username of a user (e.g. 'bob@contoso.com'), or the name of a group (e.g. 'sql server admins')"
+            }
+        },
+        "aadAdminObjectId": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+            "description": "Object ID of the specific user or group"
+            }
+        },
+        "enableAutomaticTuning": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+            "description": "Enable Automatic Tuning at SQL server and Databases"
+            }
+        },
+        "firewall_rule1":{
+            "type": "string"
+        },
+        "firewall_rule2":{
+            "type": "string"
+        },
+        "firewall_rule3":{
+            "type": "string"
+        },
+        "firewall_rule4":{
+            "type": "string"
+        },
+        "firewall_rule5":{
+            "type": "string"
+        }
+    },
+    "variables": {
+        "sq": "'"
+    },
+    "resources": [
+      {
+        "name": "[parameters('sqlServerName')]",
+        "type": "Microsoft.Sql/servers",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2021-11-01-preview",
+        "tags": {
+          "displayName": "sqlserver"
+        },
+         "identity": {
+          "type": "SystemAssigned"
+        },
+        "kind": "v12.0",
+        "properties": {
+          "administratorLogin": "[parameters('sqlServerAdminLogin')]",
+          "administratorLoginPassword": "[parameters('sqlServerAdminLoginPassword')]",
+          "version": "12.0"
+        },
+        "resources": [
+          {
+            "name": "AllowAllWindowsAzureIps",
+            "type": "firewallrules",
+            "condition": "[parameters('allowAllWindowsAzureIps')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2021-11-01-preview",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+            ],
+            "properties": {
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "0.0.0.0"
+            }
+          },
+          {
+            "condition": "[parameters('enableAadAdmin')]",
+            "type": "administrators",
+            "name": "activeDirectory",
+            "apiVersion": "2014-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "administratorType": "ActiveDirectory",
+              "login": "[parameters('aadAdminLogin')]",
+              "sid": "[parameters('aadAdminObjectId')]",
+              "tenantId": "[parameters('aadTenantId')]"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+            ]
+          },
+          {
+            "name": "[parameters('sqlDbName')]",
+            "type": "databases",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2021-08-01-preview",
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', parameters('sqlServerName'))]"
+            ],
+            "tags": {
+                "displayName": "sqldatabase"
+            },
+            "sku": {
+                "name": "[parameters('sqlDbSkuName')]",
+                "tier": "[parameters('sqlDbSkuTier')]",
+                "family": "[parameters('sqlDbSkuFamily')]",
+                "capacity": "[parameters('sqlDbSkuCapacity')]"
+            },
+            "properties": {
+                "collation": "[parameters('sqlDbCollation')]",
+                "maxSizeBytes": "[parameters('maxSizeInBytes')]",
+                "requestedBackupStorageRedundancy": "Geo"
+            }
+          } 
+        ]
+      },
+      {
+          "type": "Microsoft.Sql/servers/firewallRules",
+          "apiVersion": "2021-11-01-preview",
+          "name": "[concat(parameters('sqlservername'), '/FirewallRule1')]",
+          "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('sqlservername'))]"
+          ],
+          "properties": {
+                      "endIpAddress": "[parameters('firewall_rule1')]",
+                      "startIpAddress": "[parameters('firewall_rule1')]"
+                  }
+      },
+      {
+          "type": "Microsoft.Sql/servers/firewallRules",
+          "apiVersion": "2021-11-01-preview",
+          "name": "[concat(parameters('sqlservername'), '/FirewallRule2')]",
+          "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('sqlservername'))]"
+          ],
+          "properties": {
+                      "endIpAddress": "[parameters('firewall_rule2')]",
+                      "startIpAddress": "[parameters('firewall_rule2')]"
+                  }
+      },
+      {
+          "type": "Microsoft.Sql/servers/firewallRules",
+          "apiVersion": "2021-11-01-preview",
+          "name": "[concat(parameters('sqlservername'), '/FirewallRule3')]",
+          "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('sqlservername'))]"
+          ],
+          "properties": {
+                      "endIpAddress": "[parameters('firewall_rule3')]",
+                      "startIpAddress": "[parameters('firewall_rule3')]"
+                  }
+      },
+      {
+          "type": "Microsoft.Sql/servers/firewallRules",
+          "apiVersion": "2021-11-01-preview",
+          "name": "[concat(parameters('sqlservername'), '/FirewallRule4')]",
+          "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('sqlservername'))]"
+          ],
+          "properties": {
+                      "endIpAddress": "[parameters('firewall_rule4')]",
+                      "startIpAddress": "[parameters('firewall_rule4')]"
+                  }
+      },
+      {
+          "type": "Microsoft.Sql/servers/firewallRules",
+          "apiVersion": "2021-11-01-preview",
+          "name": "[concat(parameters('sqlservername'), '/FirewallRule5')]",
+          "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', parameters('sqlservername'))]"
+          ],
+          "properties": {
+                      "endIpAddress": "[parameters('firewall_rule5')]",
+                      "startIpAddress": "[parameters('firewall_rule5')]"
+                  }
+      },
+      {
+        "condition": "[parameters('enableAutomaticTuning')]",
+        "type": "Microsoft.Sql/servers/advisors",
+        "name": "[concat(parameters('sqlserverName'), '/', 'ForceLastGoodPlan')]",
+        "apiVersion": "2014-04-01",
+        "scale": null,
+        "properties": {
+          "autoExecuteValue": "Enabled"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('sqlserverName'))]",
+          "[resourceId('Microsoft.Sql/servers/advisors', parameters('sqlServerName'),'CreateIndex')]"
+        ]
+      },
+      {
+        "condition": "[parameters('enableAutomaticTuning')]",
+        "type": "Microsoft.Sql/servers/advisors",
+        "name": "[concat(parameters('sqlserverName'), '/', 'CreateIndex')]",
+        "apiVersion": "2014-04-01",
+        "scale": null,
+        "properties": {
+          "autoExecuteValue": "Enabled"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('sqlserverName'))]",
+          "[resourceId('Microsoft.Sql/servers/advisors', parameters('sqlServerName'),'DropIndex')]"
+        ]
+      },
+      {
+        "condition": "[parameters('enableAutomaticTuning')]",
+        "type": "Microsoft.Sql/servers/advisors",
+        "name": "[concat(parameters('sqlserverName'), '/', 'DropIndex')]",
+        "apiVersion": "2014-04-01",
+        "scale": null,
+        "properties": {
+          "autoExecuteValue": "Enabled"
+        },
+        "dependsOn": [
+          "[resourceId('Microsoft.Sql/servers', parameters('sqlserverName'))]",
+          "[resourceId('Microsoft.Sql/servers/databases', parameters('sqlServerName'), parameters('sqlDbName'))]"
+        ]
+      }
+  
+    ],
+    "outputs": {
+      "sqlConnectionString": {
+        "type": "string",
+        "value": "[concat('Data Source=tcp:',parameters('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', parameters('sqlDbName'), ';Persist Security Info=False;User ID=', parameters('sqlServerAdminLogin'), '@', parameters('sqlServerName'), ';Password=', variables('sq'), parameters('sqlServerAdminLoginPassword'), variables('sq'),';Connect Timeout=60;Encrypt=True')]"
+      },
+      "sqlConnectionStringNoCreds": {
+        "type": "string",
+        "value": "[concat('Data Source=tcp:',parameters('sqlServerName'), '.database.windows.net,1433;Initial Catalog=', parameters('sqlDbName'))]"
+      }
+    }
+  }

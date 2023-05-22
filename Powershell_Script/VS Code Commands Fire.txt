@@ -1,0 +1,23 @@
+
+ARM template deployment################
+New-AzResourceGroupDeployment -ResourceGroupName EL-AZ-USE2-DEV-BOOK -TemplateFile ./template.json -TemplateParameterFile ./parameters.json
+
+
+xDu8Q~CjtB5oNGeXI1axClExSPvghlcNDouWibQP
+
+Azure Function##############
+func
+func start
+func azure functionapp publish eluse2sxrdvwes02func
+Remove-AzFunctionApp -Name eluse2sxrdvwes02func
+
+Connect-MgGraph
+api://a1456347-6685-4105-afa3-22953060639f/.default
+
+4CF8Q~c7d5Yr2xHvQuXL-sUouxElck.qc-I_eaOv
+
+Enable App Service Authentication for the Azure Function App
+
+AP.ICE.Tool.ALIF.Azure
+
+New-AzResourceGroupDeployment -ResourceGroupName EL-AZ-USE2-DEV-BOOK -TemplateFile ./azuredeploy.json -TemplateParameterFile ./azuredeploy.parameters.json

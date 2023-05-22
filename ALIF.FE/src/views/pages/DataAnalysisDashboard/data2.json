@@ -1,0 +1,183 @@
+[
+    {
+        "Provider": "YANFENG (SHENYANG) SEATING SYSTEMS CO.,LTD",
+        "count": 390,
+        "Weight": 2341087.0609999998,
+        "count_percentage": 0.0374,
+        "weight_percentage": 0.0867,
+        "country_of_origin": [
+            {
+                "country": "China",
+                "sales": 40
+            },
+            {
+                "country": "Argentina",
+                "sales": 40
+            },
+            {
+                "country": "Poland",
+                "sales": 20
+            }
+            
+        ]
+    },
+    {
+        "Provider": "ADIENT POLAND SP Z.O.O",
+        "count": 107,
+        "Weight": 2099621.7089999998,
+        "count_percentage": 0.0103,
+        "weight_percentage": 0.0778,
+        "country_of_origin": [
+            {
+                "country": "Poland",
+                "sales": 40
+            },
+            {
+                "country": "Germany",
+                "sales": 60
+            }
+        ]
+    },
+    {
+        "Provider": "KEIPER (CHANGSHU) SEATING MECHANISMS CO. LTD",
+        "count": 309,
+        "Weight": 1992967.673,
+        "count_percentage": 0.0296,
+        "weight_percentage": 0.0738,
+        "country_of_origin": [
+            {
+                "country": "China",
+                "sales": 20
+            },
+            {
+                "country": "Japan",
+                "sales": 80
+            }
+        ]
+    },
+    {
+        "Provider": "ADIENT AUTOMOTIVE COMPONENTS GMBH",
+        "count": 77,
+        "Weight": 1886377.8,
+        "count_percentage": 0.0074,
+        "weight_percentage": 0.0699,
+        "country_of_origin": [
+            {
+                "country": "Germany",
+                "sales": 70
+            },
+            {
+                "country":"Austria",
+                "sales":30
+            }
+        ]
+    },
+    {
+        "Provider": "ADIENT",
+        "count": 1112,
+        "Weight": 1605895.051,
+        "count_percentage": 0.1067,
+        "weight_percentage": 0.0595,
+        "country_of_origin": [
+            {
+                "country": "United States",
+                "sales": 20
+            },
+            {
+                "country": "Japan",
+                "sales": 30
+            }
+            ,{
+                "country": "United Kingdom",
+                "sales": 25
+            },
+            {
+                "country": "Australia",
+                "sales": 25
+            },{
+                "country": "United States",
+                "sales": 98.57
+            }
+        ]
+    },
+    {
+        "Provider": "SHANGHAI YANFENG SEATING LTD",
+        "count": 612,
+        "Weight": 1501380.861,
+        "count_percentage": 0.0587,
+        "weight_percentage": 0.0556,
+        "country_of_origin": [
+            {
+                "country": "Tawian",
+                "sales": 50
+            },
+            {
+                "country":"Vietnam",
+                "sales":50
+            }
+        ]
+    },
+    {
+        "Provider": "YANFENG ADIENT (LANGFANG) SEATING CO. LTD",
+        "count": 168,
+        "Weight": 1473516.5900000001,
+        "count_percentage": 0.0161,
+        "weight_percentage": 0.0546,
+        "country_of_origin": [
+            {
+                "country": "Africa",
+                "sales": 40
+            },
+            {
+                "country":"Canada",
+                "sales":60
+            }
+        ]
+    },
+    {
+        "Provider": "ADIENT COMPONENTS LTD. & CO.KG",
+        "count": 38,
+        "Weight": 932760.746,
+        "count_percentage": 0.0036,
+        "weight_percentage": 0.0346,
+        "country_of_origin": [
+            {
+                "country": "Poland",
+                "sales": 20
+            },
+            {
+                "country":"Austria",
+                "sales":30
+            },
+            {
+                "country":"Australia",
+                "sales":50
+            }
+        ]
+    },
+    {
+        "Provider": "ADIENT US ENTERPRISES LP",
+        "count": 661,
+        "Weight": 886932.529,
+        "count_percentage": 0.0634,
+        "weight_percentage": 0.0329,
+        "country_of_origin": [
+            {
+                "country": "United States",
+                "sales": 40
+            },
+            {
+                "country": "Canada",
+                "sales": 20
+            },
+            {
+                "country":"Japan",
+                "sales":10
+            },
+            {
+                "country":"Africa",
+                "sales":30
+            }
+        ]
+    }
+]

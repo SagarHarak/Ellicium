@@ -1,0 +1,82 @@
+
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "keyVaultName": {
+      "value": "GEN-UNIQUE"
+    },
+    "objectId": {
+      "value": "GEN-AZUREAD-OBJECTID"
+    },
+    "secretsObject": {
+      "value": {
+        "secrets": [
+          {
+            "secretName": "exampleSecret1",
+            "secretValue": "secretVaule1"
+          },
+          {
+            "secretName": "exampleSecret2",
+            "secretValue": "secretValue2"
+          }
+        ]
+      }
+    }
+  }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "Keyvault-Ellicium",
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2019-09-01",
+            "location": "[resourceGroup().location]",
+            "tags": {
+                "displayName": "Keyvault-Ellicium"
+            },
+            "properties": {
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": true,
+                "tenantId": "tenantId",
+                "accessPolicies": [
+                    {
+                        "tenantId": "tenantId",
+                        "objectId": "objectId",
+                        "permissions": {
+                            "keys": [
+                                "Get"
+                            ],
+                            "secrets": [
+                                "List",
+                                "Get",
+                                "Set"
+                            ]
+                        }
+                    }
+                ],
+                "sku": {
+                    "name": "standard",
+                    "family": "A"
+                }
+            },
+            "resources": [
+                {
+                    "type": "secrets",
+                    "name": "secretellicium",
+                    "apiVersion": "2016-10-01",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.KeyVault/vaults', 'Keyvault-Ellicium')]"
+                    ],
+                    "properties": {
+                        "value": "secretValue"
+                    }
+                }
+            ]
+            
+        }
+    ],
+    "outputs": {}
+}

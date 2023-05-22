@@ -1,0 +1,162 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "FrontDoorname":{
+            "type":"string"
+        },
+        "location":{
+            "type":"string",
+            "defaultValue": "Global"
+        },
+        "backend_webapp":{
+            "type":"string"
+        },
+        "WafPolicyName":{
+            "type":"string"
+        },
+        "CreatedAt":{
+            "type":"string",
+            "defaultValue": "[utcNow('d')]"
+        },
+        "ProjectCodeName":{
+            "type":"string",
+            "defaultValue":""
+        },
+        "createdBy":{
+            "type":"string",
+            "defaultValue":""
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Cdn/profiles",
+            "apiVersion": "2022-05-01-preview",
+            "name": "[parameters('FrontDoorname')]",
+            "location": "[parameters('location')]",
+             "tags": {
+                "ProjectCodeName": "[parameters('ProjectCodeName')]",
+                "createdBy": "[parameters('createdBy')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "sku": {
+                "name": "Premium_AzureFrontDoor"
+            },
+            "kind": "frontdoor",
+            "properties": {
+                "originResponseTimeoutSeconds": 30
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/profiles/afdendpoints",
+            "apiVersion": "2022-05-01-preview",
+            "name": "[concat(parameters('FrontDoorname'), '/',parameters('FrontDoorname'))]",
+            "location": "Global",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/profiles', parameters('FrontDoorname'))]"
+            ],
+            "properties": {
+                "enabledState": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/profiles/origingroups",
+            "apiVersion": "2022-05-01-preview",
+            "name": "[concat(parameters('FrontDoorname'), '/backendpoolbe')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/profiles', parameters('FrontDoorname'))]"
+            ],
+            "properties": {
+                "loadBalancingSettings": {
+                    "sampleSize": 4,
+                    "successfulSamplesRequired": 2,
+                    "additionalLatencyInMilliseconds": 0
+                },
+                "healthProbeSettings": {
+                    "probePath": "/",
+                    "probeRequestType": "HEAD",
+                    "probeProtocol": "Https",
+                    "probeIntervalInSeconds": 30
+                },
+                "sessionAffinityState": "Disabled"
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/profiles/origingroups/origins",
+            "apiVersion": "2022-05-01-preview",
+            "name": "[concat(parameters('FrontDoorname'), '/backendpoolbe/backendorigin')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/profiles/origingroups', parameters('FrontDoorname'), 'backendpoolbe')]",
+                "[resourceId('Microsoft.Cdn/profiles', parameters('FrontDoorname'))]"
+            ],
+            "properties": {
+                "hostName": "[concat(parameters('backend_webapp'), '.azurewebsites.net')]",
+                "httpPort": 80,
+                "httpsPort": 443,
+                "originHostHeader": "[concat(parameters('backend_webapp'), '.azurewebsites.net')]",
+                "priority": 1,
+                "weight": 1000,
+                "enabledState": "Enabled",
+                "enforceCertificateNameCheck": true
+            }
+        },
+       
+        {
+            "type": "Microsoft.Cdn/profiles/securitypolicies",
+            "apiVersion": "2022-05-01-preview",
+            "name": "[concat(parameters('FrontDoorname'), '/',parameters('WafPolicyName'),'-securityPolicy')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/profiles', parameters('FrontDoorname'))]",  
+                "[resourceId('Microsoft.Cdn/profiles/afdendpoints', parameters('FrontDoorname'), parameters('FrontDoorname'))]"
+                ],
+            "properties": {
+                "parameters": {
+                    "wafPolicy": {
+                        "id": "[concat('/subscriptions/',subscription().subscriptionId,'/resourcegroups/',resourceGroup().name,'/providers/Microsoft.Network/frontdoorwebapplicationfirewallpolicies/',parameters('WafPolicyName'))]"
+                    },
+                    "associations": [
+                        {
+                            "domains": [
+                                {
+                                    "id": "[resourceId('Microsoft.Cdn/profiles/afdendpoints', parameters('FrontDoorname'), parameters('FrontDoorname'))]"
+                                }
+                            ],
+                            "patternsToMatch": [
+                                "/*"
+                            ]
+                        }
+                    ],
+                    "type": "WebApplicationFirewall"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Cdn/profiles/afdendpoints/routes",
+            "apiVersion": "2022-05-01-preview",
+            "name": "[concat(parameters('FrontDoorname'), '/',parameters('FrontDoorname'),'/',parameters('FrontDoorname'),'routingrulebe')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Cdn/profiles/afdendpoints', parameters('FrontDoorname'), parameters('FrontDoorname'))]",
+                "[resourceId('Microsoft.Cdn/profiles', parameters('FrontDoorname'))]",
+                "[resourceId('Microsoft.Cdn/profiles/origingroups', parameters('FrontDoorname'), 'backendpoolbe')]"
+            ],
+            "properties": {
+                "originGroup": {
+                    "id": "[resourceId('Microsoft.Cdn/profiles/origingroups', parameters('FrontDoorname'), 'backendpoolbe')]"
+                },
+                "ruleSets": [],
+                "supportedProtocols": [
+                    "Http",
+                    "Https"
+                ],
+                "patternsToMatch": [
+                    "/*"
+                ],
+                "forwardingProtocol": "HttpsOnly",
+                "linkToDefaultDomain": "Enabled",
+                "httpsRedirect": "Disabled",
+                "enabledState": "Enabled"
+            }
+        }
+    ]
+}

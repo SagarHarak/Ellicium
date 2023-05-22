@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "WafPolicyName":{
+            "type":"string",
+            "defaultValue":"wafpolicy"
+        },
+        "location":{
+            "type":"string",
+            "defaultValue": "Global"
+        },
+        "CreatedAt":{
+            "type":"string",
+            "defaultValue": "[utcNow('d')]"
+        },
+
+        "ProjectCodeName":{
+            "type":"string",
+            "defaultValue":""
+        },
+
+        "createdBy":{
+            "type":"string",
+            "defaultValue":""
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Network/frontdoorwebapplicationfirewallpolicies",
+            "apiVersion": "2022-05-01",
+            "name": "[parameters('WafPolicyName')]",
+            "tags": {
+                "ProjectCodeName": "[parameters('ProjectCodeName')]",
+                "createdBy": "[parameters('createdBy')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Premium_AzureFrontDoor"
+            },
+            "properties": {
+                "policySettings": {
+                    "enabledState": "Enabled",
+                    "mode": "Prevention",
+                    "customBlockResponseStatusCode": 403,
+                    "requestBodyCheck": "Disabled"
+                },
+                "customRules": {
+                    "rules": []
+                },
+                "managedRules": {
+                    "managedRuleSets": [
+                        {
+                            "ruleSetType": "Microsoft_DefaultRuleSet",
+                            "ruleSetVersion": "1.1",
+                            "ruleGroupOverrides": [],
+                            "exclusions": []
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}

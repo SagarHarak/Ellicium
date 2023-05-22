@@ -1,0 +1,20 @@
+.popup-content {
+    z-index: 1060 !important;
+  }
+  .popup-arrow {
+    z-index: 1060 !important;
+  }
+  [role='tooltip'].popup-content {
+    z-index: 1060 !important;
+  }
+  
+  .popup-overlay {
+    z-index: 1060 !important;
+  }
+  [data-popup='tooltip'].popup-overlay {
+    z-index: 1060 !important;
+  }
+
+  .h{
+    text-overflow: ellipsis;
+  }

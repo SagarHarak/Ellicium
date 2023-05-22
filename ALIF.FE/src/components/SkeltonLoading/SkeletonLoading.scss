@@ -1,0 +1,20 @@
+@keyframes loaderslider {
+  0% {
+    background-position: -800px 0;
+  }
+  100% {
+    background-position: 800px 0;
+  }
+}
+
+.animateloader {
+  animation-duration: 10s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: loaderslider;
+  animation-timing-function: linear;
+  background: linear-gradient(to right, #d1d1d1 2%, #dfdfdf 18%, #d1d1d1 52%);
+  background-size: 200px 104px;
+  height: 70px;
+  position: relative;
+}

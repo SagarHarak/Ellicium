@@ -1,0 +1,4 @@
+.overflow-scroll + .position-relative .table {
+    width: 100% !important;
+    overflow-x: scroll;
+}

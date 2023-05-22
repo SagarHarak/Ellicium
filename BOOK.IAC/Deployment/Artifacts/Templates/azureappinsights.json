@@ -1,0 +1,63 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "appinsightname": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of Application Insights resource."
+      }
+    },
+    "createdBy": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "CreatedAt": {
+      "type": "string",
+      "defaultValue": "[utcNow('d')]"
+    },
+    "ProjectCodeName": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "Application_Type": {
+      "type": "string",
+      "defaultValue": "web",
+      "metadata": {
+        "description": "Type of app you are deploying. This field is for legacy reasons and will not impact the type of App Insights resource you deploy."
+      }
+    },
+    "appLocation": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Which Azure Region to deploy the resource to. This must be a valid Azure regionId."
+      }
+    },
+    "workspaceResourceId": {
+      "type": "string",
+      "metadata": {
+        "description": "Log Analytics workspace ID to associate with your Application Insights resource."
+      }
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[parameters('appinsightname')]",
+      "location": "[parameters('appLocation')]",
+      "tags": {
+        "ProjectCodeName": "[parameters('ProjectCodeName')]",
+        "createdBy": "[parameters('createdBy')]",
+        "createdAt": "[parameters('CreatedAt')]"
+      },
+      "kind": "[parameters('Application_Type')]",
+      "properties": {
+        "Application_Type": "[parameters('Application_Type')]",
+        "WorkspaceResourceId": "[parameters('workspaceResourceId')]"
+      }
+    }
+  ],
+  "outputs": {}
+}

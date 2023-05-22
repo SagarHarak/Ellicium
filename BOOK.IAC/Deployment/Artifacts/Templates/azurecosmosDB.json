@@ -1,0 +1,113 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "CosmosDBaccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "Cosmos DB account name"
+      }
+    },
+      "ProjectCodeName":{
+        "type":"string"
+    },
+      "createdby":{
+        "type":"string",
+        "defaultValue" : ""
+    },
+     "createdAt":{
+      "type":"string",
+      "defaultValue" : ""
+    },
+    "location": {
+      "type": "String",
+      "defaultValue": "[resourceGroup().location]"
+    },
+    "CosmosdatabaseName": {
+      "type": "string",
+       "defaultValue": "supplierDB",
+      "metadata": {
+        "description": "The name for the SQL API database"
+      }
+    },
+    "CosmosDbContainerName": {
+      "type": "string",
+       "defaultValue": "Supplierlist",
+      "metadata": {
+        "description": "The name for the SQL API container"
+      }
+    }
+  },
+  "variables": {
+    "TenantId": "[subscription().TenantId]"
+    },
+  "resources": [
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "apiVersion": "2022-05-15",
+      "name": "[toLower(parameters('CosmosDBaccountName'))]",
+      "tags": {
+        "ProjectCodeName": "[parameters('ProjectCodeName')]",
+        "createdBy": "[parameters('createdBy')]",
+        "createdAt": "[parameters('CreatedAt')]"
+      },
+      "location": "[parameters('location')]",
+      "properties": {
+        "enableFreeTier": true,
+        "databaseAccountOfferType": "Standard",
+        "consistencyPolicy": {
+          "defaultConsistencyLevel": "Session"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases",
+      "apiVersion": "2022-05-15",
+      "name": "[format('{0}/{1}', toLower(parameters('CosmosDBaccountName')), parameters('CosmosdatabaseName'))]",
+      "properties": {
+        "resource": {
+          "id": "[parameters('CosmosdatabaseName')]"
+        },
+        "options": {
+          "throughput": 1000
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts', toLower(parameters('CosmosDBaccountName')))]"
+      ]
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers",
+      "apiVersion": "2022-05-15",
+      "name": "[format('{0}/{1}/{2}', toLower(parameters('CosmosDBaccountName')), parameters('CosmosdatabaseName'), parameters('CosmosDbContainerName'))]",
+      "properties": {
+        "resource": {
+          "id": "[parameters('CosmosDbContainerName')]",
+          "partitionKey": {
+            "paths": [
+              "/Level_1"
+            ],
+            "kind": "Hash"
+          },
+          "indexingPolicy": {
+            "indexingMode": "consistent",
+            "includedPaths": [
+              {
+                "path": "/*"
+              }
+            ],
+            "excludedPaths": [
+              {
+                "path": "/_etag/?"
+              }
+            ]
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', toLower(parameters('CosmosDBaccountName')), parameters('CosmosdatabaseName'))]"
+      ]
+    }
+    ],
+    "outputs": {}
+}

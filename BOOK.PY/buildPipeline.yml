@@ -1,0 +1,53 @@
+name: $(BuildDefinitionName)_$(SourceBranchName)_$(date:yyyyMMdd)$(rev:.r)
+pool:
+  name: 'default'
+  vmImage: 'winagent3'
+trigger:
+    - Develop
+variables:
+  pythonVersion: '3.9'
+  architecture: 'x64'
+  system.debug: 'true'
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.9'
+    disableDownloadFromRegistry: true
+    addToPath: true
+    architecture: 'x64'
+- script: |
+      python -m venv antenv
+      source antenv/bin/activate
+      python -m pip install --upgrade pip
+      pip install setup
+      pip install --target="./.python_packages/lib/site-packages" -r $(System.DefaultWorkingDirectory)/requirements.txt
+  workingDirectory: '$(Build.SourcesDirectory)'
+  displayName: "Install requirements"
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)/*'
+    includeRootFolder: true
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+# - task: ArchiveFiles@2
+#    inputs:
+#      rootFolderOrFile: '$(Build.SourcesDirectory)'
+#      includeRootFolder: false
+#      archiveType: 'zip'
+#      archiveFile: '$(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip'
+#      replaceExistingArchive: true
+#      verbose: # (no value); this input is optional
+# - publish: 
+#    displayName: 'Upload package'
+#    artifact: drop
+
+
