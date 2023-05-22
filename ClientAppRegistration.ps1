@@ -1,5 +1,8 @@
 ################# Creating client app registration #############################################
+<<<<<<< HEAD
 
+=======
+>>>>>>> afe9e0788d1792f329f4e80e70010214c86cc3b4
 $appregclient = "eluse2client"  #client app registration name
 
 $APIparameters = @{
