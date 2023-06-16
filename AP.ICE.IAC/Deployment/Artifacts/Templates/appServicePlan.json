@@ -1,0 +1,73 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appServicePlanName": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "Standard"
+        },
+
+        "skuName": {
+            "type": "string",
+            "defaultValue": "S1"
+        },
+        "skuCapacity": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "farmKind": {
+            "type": "string",
+            "defaultValue": "linux"
+        },
+        "workerSize": {
+            "type": "string",
+            "allowedValues": [
+                "0",
+                "1",
+                "2"
+            ],
+            "defaultValue": "0"
+        },
+        "CreatedAt":{
+            "type":"string",
+            "defaultValue": "[utcNow('d')]"
+        },
+        "project":{
+            "type":"string"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('appServicePlanName')]",
+            "tags": {
+                "project": "[parameters('project')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "capacity": "[parameters('skuCapacity')]"
+            },
+            "kind": "[parameters('farmKind')]",
+            "properties": {
+                "mode": "Incremental",
+                "reserved": true,
+                "workerSize": "[parameters('workerSize')]",
+                "numberOfWorkers": 1
+            }
+        }
+    ],
+    "outputs": {}
+}

@@ -1,0 +1,58 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "webAppName": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "appServicePlanName": {
+            "type": "string"
+        },
+        "linuxFxVersion": {
+            "type": "string",
+            "defaultValue": "NODE|14-lts"
+        },
+        "appInsightsName": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('webAppName')]",
+            "location": "[parameters('location')]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "siteConfig": {
+                    "appCommandLine": "npx serve -s",
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "alwaysOn": true,
+                    "appSettings": [
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2015-05-01').ConnectionString]"
+                        },
+                        {
+                            "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+                            "value": "~2"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

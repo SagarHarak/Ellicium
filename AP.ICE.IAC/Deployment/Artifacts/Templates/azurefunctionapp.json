@@ -1,0 +1,148 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "functionAppName": {
+            "type": "string"
+        },
+        "WebAppName": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "appServicePlanName": {
+            "type": "string"
+        },
+        "appInsightsName": {
+            "type": "string"
+        },
+        "CreatedAt":{
+            "type":"string",
+            "defaultValue": "[utcNow('d')]"
+        },
+        "project":{
+            "type":"string"
+        },
+        "FuncAppRegistrationSecret":{
+            "type":"string"
+        },
+        "FuncAppRegistrationAppId":{
+            "type":"string"
+        },
+        "TenantId":{
+            "type":"string",
+            "defaultValue" : "[subscription().tenantId]"
+        }
+    },
+    "variables": {
+        
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "name": "[parameters('functionAppName')]",
+            "tags": {
+                "project": "[parameters('project')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "apiVersion": "2021-03-01",
+            "location": "[parameters('location')]",
+            "kind": "functionapp,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "enabled": true,
+                "siteConfig": {
+                    "alwaysOn": true,
+                    "cors": {
+                    "allowedOrigins": [
+                        "[concat('https://',parameters('WebAppName'),'.azurewebsites.net')]"
+                    ],
+                    "supportCredentials": true
+                },
+                    "linuxFxVersion": "node|14",
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "node"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                            "name": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value": "[reference(resourceId('Microsoft.Insights/components', parameters('appInsightsName')), '2015-05-01').ConnectionString]"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+        "type": "Microsoft.Web/sites/config",
+        "apiVersion": "2021-03-01",
+        "name": "[concat(parameters('functionAppName'), '/authsettingsV2')]",
+        "dependsOn": [
+              "[resourceId('Microsoft.Web/sites', parameters('functionAppName'))]"
+          ],
+        "properties": {
+            "platform": {
+                "enabled": true,
+                "runtimeVersion": "~1"
+            },
+            "globalValidation": {
+                "requireAuthentication": true,
+                "unauthenticatedClientAction": "Return401"
+            },
+            "identityProviders": {
+                "azureActiveDirectory": {
+                    "isAutoProvisioned": false,
+                    "enabled": true,
+                    "registration": {
+                        "clientId": "[parameters('FuncAppRegistrationAppId')]",
+                        "clientSecretCertificateThumbprint": "[parameters('FuncAppRegistrationSecret')]",
+                        "clientSecretSettingName": "MICROSOFT_PROVIDER_AUTHENTICATION_SECRET",
+                        "openIdIssuer": "[concat('https://sts.windows.net/',parameters('TenantId'),'/v2.0')]"
+                    },
+                    "login": {
+                        "disableWWWAuthenticate": false
+                    },
+                    "validation": {
+                        "jwtClaimChecks": {},
+                        "allowedAudiences": [],
+                        "defaultAuthorizationPolicy": {
+                            "allowedPrincipals": {}
+                        }
+                    }
+                }
+            },
+            "login": {
+                "routes": {},
+                "tokenStore": {
+                    "enabled": true
+                }
+            },
+            "httpSettings": {
+                "forwardProxy": {
+                    "convention": "NoProxy"
+                },
+                "requireHttps": true,
+                "routes": {
+                    "apiPrefix": "/.auth"
+                }
+            }
+        }
+      }
+    ],
+    "outputs": {
+
+    }
+}
