@@ -1,0 +1,200 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "Appserviceuiname": {
+            "type": "String"
+        },
+        "Appserviceapiname": {
+            "type": "String"
+        },
+        "appserviceplanname": {
+            "type": "string"
+        },
+        "location": {
+            "type": "String",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "CreatedAt":{
+            "type":"string",
+            "defaultValue": "[utcNow('d')]"
+        },
+
+        "project":{
+            "type":"string",
+            "defaultValue":""
+        },
+
+        "createdBy":{
+            "type":"string",
+            "defaultValue":""
+        },
+        "alwaysOn": {
+            "type": "Bool",
+            "defaultValue": false
+        },
+        "currentStack": {
+            "type": "String",
+            "defaultValue": "node"
+        },
+        "phpVersion": {
+            "type": "String",
+            "defaultValue": "OFF"
+        },
+        "nodeVersion": {
+            "type": "String",
+            "defaultValue" : "~16"
+        },
+        "ui_support_credentials" : {
+            "type": "Bool",
+            "defaultValue": false
+        },
+        "api_support_credentials" : {
+            "type": "Bool",
+            "defaultValue": false
+        },
+        "ui_allowedcredentials" : {
+            "type": "string",
+             "defaultValue": "*"
+        },
+        "api_allowedcredentials" : {
+            "type": "string",
+            "defaultValue": "*"
+        }
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2022-03-01",
+            "location": "[parameters('location')]",
+            "name": "[parameters('appserviceplanname')]",
+            "sku": {
+                "name": "S1",
+                "tier": "Standard",
+                "capacity": 1
+            },
+            "kind": "app",
+            "properties": {
+                "reserved": false
+            }
+
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('Appserviceuiname')]",
+            "tags": {
+                "project": "[parameters('project')]",
+                "createdBy": "[parameters('createdBy')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "location": "[parameters('location')]",
+            "kind": "app",
+            "dependsOn": [
+                "[parameters('appserviceplanname')]"
+            ],
+            "properties": {
+                "name": "[parameters('Appserviceuiname')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "[parameters('nodeVersion')]"
+                        }
+                    ],
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "[parameters('currentStack')]"
+                        }
+                    ],
+                    "phpVersion": "[parameters('phpVersion')]",
+                    "nodeVersion": "[parameters('nodeVersion')]",
+                    "alwaysOn": "[parameters('alwaysOn')]"
+                },
+                "enabled": true,
+                "serverFarmId": "[parameters('appserviceplanname')]",
+                "clientAffinityEnabled": true,
+                "virtualNetworkSubnetId": null
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('Appserviceuiname'), '/web')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('Appserviceuiname'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "allowedOrigins": [
+                        "[parameters('ui_allowedcredentials')]"
+                    ],
+                    "supportCredentials":  "[parameters('ui_support_credentials')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2022-03-01",
+            "name": "[parameters('Appserviceapiname')]",
+            "tags": {
+                "project": "[parameters('project')]",
+                "createdBy": "[parameters('createdBy')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            },
+            "location": "[parameters('location')]",
+            "kind": "app",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "dependsOn": [
+                "[parameters('appserviceplanname')]"
+            ],
+            "properties": {
+                "name": "[parameters('Appserviceapiname')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "[parameters('nodeVersion')]"
+                        }
+                    ],
+                    "metadata": [
+                        {
+                            "name": "CURRENT_STACK",
+                            "value": "[parameters('currentStack')]"
+                        }
+                    ],
+                    "phpVersion": "[parameters('phpVersion')]",
+                    "nodeVersion": "[parameters('nodeVersion')]",
+                    "alwaysOn": "[parameters('alwaysOn')]"
+                },
+                "enabled": true,
+                "serverFarmId": "[parameters('appserviceplanname')]",
+                "clientAffinityEnabled": true,
+                "virtualNetworkSubnetId": null
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites/config",
+            "apiVersion": "2022-03-01",
+            "name": "[concat(parameters('Appserviceapiname'), '/web')]",
+            "location": "East US 2",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/sites', parameters('Appserviceapiname'))]"
+            ],
+            "properties": {
+                "cors": {
+                    "allowedOrigins": [
+                        "[parameters('api_allowedcredentials')]"
+                    ],
+                    "supportCredentials": "[parameters('api_support_credentials')]"
+                }
+            }
+        }
+    ]
+}

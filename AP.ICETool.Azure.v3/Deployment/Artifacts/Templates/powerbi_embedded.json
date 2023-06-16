@@ -1,0 +1,70 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "sku": {
+            "type": "string",
+            "allowedValues": [
+                "A1",
+                "A2",
+                "A3",
+                "A4",
+                "A5",
+                "A6",
+                "A7",
+                "A8"
+            ],
+            "defaultValue": "A1"
+        },
+        "members": {
+            "type": "Array"
+        },
+        "CreatedAt":{
+            "type":"string",
+            "defaultValue": "[utcNow('d')]"
+        },
+        "project":{
+            "type":"string",
+            "defaultValue":""
+        },
+        "createdBy":{
+            "type":"string",
+            "defaultValue":""
+        },
+        "mode": {
+            "type": "string",
+            "defaultValue":"Gen2"
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2021-01-01",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "type": "Microsoft.PowerBIDedicated/capacities",
+            "sku": {
+                "name": "[parameters('sku')]",
+                "tier": "PBIE_Azure"
+            },
+            "properties": {
+                "administration": {
+                    "members": "[parameters('members')]"
+                    
+                },
+                "mode": "[parameters('mode')]"
+            },
+            "tags": {
+                "project": "[parameters('project')]",
+                "createdBy": "[parameters('createdBy')]",
+                "createdAt": "[parameters('CreatedAt')]"
+            }
+        }
+    ]
+}

@@ -1,0 +1,3 @@
+ CREATE  UNIQUE NONCLUSTERED INDEX unique_check ON dbo.simplified_data (  serial_no ASC  , vendor ASC  , item_name ASC  , name ASC  )  
+	 WITH (  PAD_INDEX = OFF ,FILLFACTOR = 100  ,SORT_IN_TEMPDB = OFF , IGNORE_DUP_KEY = ON , STATISTICS_NORECOMPUTE = OFF , ONLINE = OFF , ALLOW_ROW_LOCKS = ON , ALLOW_PAGE_LOCKS = ON  )
+	 ON [PRIMARY ] ;
